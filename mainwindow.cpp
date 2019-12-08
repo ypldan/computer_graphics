@@ -22,7 +22,11 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* event) {
-    QRect rect(press, event->pos());
+    int xmin = std::min(press.x(), event->x());
+    int ymin = std::min(press.y(), event->y());
+    int xmax = std::max(press.x(), event->x());
+    int ymax = std::max(press.y(), event->y());
+    QRect rect(QPoint(xmin, ymin), QPoint(xmax, ymax));
     if (state == 1 || state == 0) {
         ui->label2->setNum(counter.count(rect));
     } else if (state == 2) {

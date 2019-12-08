@@ -5,6 +5,7 @@
 #include <QSet>
 #include <QVector>
 #include <algorithm>
+#include <QDebug>
 
 inline uint qHash (const QPoint & key)
 {
@@ -22,7 +23,7 @@ int lineDist(QPoint p1, QPoint p2, QPoint p);
 
 // End points of line L are p1 and p2.  side can have value
 // 1 or -1 specifying each of the parts made by the line L
-void quickHull(QVector<QPoint> a, int n, QPoint p1, QPoint p2, int side, QVector<QPoint> &hull);
+void quickHull(QVector<QPoint> a, int n, QPoint p1, QPoint p2, int side, QSet<QPoint> &hull);
 
 QVector<QPoint> getHull(QVector<QPoint> points);
 
