@@ -10,6 +10,7 @@
 #include "convex_hull.h"
 #include "segments.h"
 #include "cabinet.h"
+#include "bezier.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,6 +28,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent* event) override;
     void paintEvent(QPaintEvent*) override;
     void mousePressEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private slots:
     void on_pushButton_clicked();
@@ -43,6 +45,8 @@ private slots:
 
     void on_zSlider_sliderMoved(int position);
 
+    void on_pushButton_5_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene grahicsScene;
@@ -51,6 +55,7 @@ private:
     QVector<QPoint> points;
     QVector<QPoint> hull;
     QVector<QLine> segments;
+    QVector<QPointF> curve;
     int state;
 };
 #endif // MAINWINDOW_H

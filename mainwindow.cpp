@@ -23,22 +23,24 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* event) {
-    int xmin = std::min(press.x(), event->x());
-    int ymin = std::min(press.y(), event->y());
-    int xmax = std::max(press.x(), event->x());
-    int ymax = std::max(press.y(), event->y());
-    QRect rect(QPoint(xmin, ymin), QPoint(xmax, ymax));
-    if (state == 1 || state == 0) {
-        ui->label2->setNum(counter.count(rect));
-    } else if (state == 2) {
-        QVector<QLine> newVector;
-        for (auto l: segments) {
-            if (instersects(l, rect)) {
-                newVector.push_back(l);
+    if (state == 0 || state == 1 || state == 2) {
+        int xmin = std::min(press.x(), event->x());
+        int ymin = std::min(press.y(), event->y());
+        int xmax = std::max(press.x(), event->x());
+        int ymax = std::max(press.y(), event->y());
+        QRect rect(QPoint(xmin, ymin), QPoint(xmax, ymax));
+        if (state == 1 || state == 0) {
+            ui->label2->setNum(counter.count(rect));
+        } else if (state == 2) {
+            QVector<QLine> newVector;
+            for (auto l: segments) {
+                if (instersects(l, rect)) {
+                    newVector.push_back(l);
+                }
             }
+            segments = newVector;
+            update();
         }
-        segments = newVector;
-        update();
     }
 }
 
@@ -74,10 +76,27 @@ void MainWindow::paintEvent(QPaintEvent *) {
         auto m = getMatrix(x, y, z);
         painter.drawLines(projectCube(QVector3D(250,250,250), 200, angle, m));
     }
+    if (state == 4) {
+        if (curve.size() >= 2) {
+            painter.setPen(Qt::black);
+            painter.drawPoints(getCurve(curve));
+        }
+        QPen redPen(Qt::red, 2);
+        painter.setPen(redPen);
+        for (auto p: curve) {
+            painter.drawPoint(p);
+        }
+    }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     press = event->pos();
+}
+
+void MainWindow::mouseDoubleClickEvent(QMouseEvent *event) {
+    state = 4;
+    curve.push_back(event->pos());
+    update();
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -126,5 +145,12 @@ void MainWindow::on_ySlider_sliderMoved(int position)
 
 void MainWindow::on_zSlider_sliderMoved(int position)
 {
+    update();
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    state = 4;
+    curve.clear();
     update();
 }
