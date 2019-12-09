@@ -1,6 +1,6 @@
 #include "points_in_rect.h"
 
-int INDENT = 140;
+int INDENT = 200;
 
 QVector<QPoint> generatePoints(QSize &size, int n) {
     QVector<QPoint> points(n);

@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->lineEdit->setValidator( new QIntValidator(0, 10000000, this) );
     ui->lineEdit2->setValidator( new QIntValidator(0, 1000000, this) );
+    ui->lineEdit3->setValidator( new QIntValidator(1, 180, this) );
 }
 
 MainWindow::~MainWindow()
@@ -43,7 +44,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event) {
 
 void MainWindow::paintEvent(QPaintEvent *) {
     QPainter painter(this);
-    painter.setPen(Qt::black);
+
     if (state == 0 || state == 1) {
         for (auto point: points) {
             painter.drawPoint(point);
@@ -51,13 +52,27 @@ void MainWindow::paintEvent(QPaintEvent *) {
     }
     if (state == 1) {
         state = 0;
-        painter.setPen(Qt::red);
-        painter.drawPolygon(QPolygon(hull));
+        QPen redPen(Qt::red, 2);
+        painter.setPen(redPen);
+        auto polygon = QPolygon(hull);
+        painter.drawPolygon(polygon);
+        QPen bluePen(Qt::blue, 5);
+        painter.setPen(bluePen);
+        painter.drawPoints(polygon);
     }
     if (state == 2) {
         for (auto segment: segments) {
             painter.drawLine(segment);
         }
+    }
+    if (state == 3) {
+        painter.setPen(Qt::black);
+        double angle = ui->lineEdit3->text().toDouble() / 180 * 3.14;
+        double x = ui->xSlider->value();
+        double y = ui->ySlider->value();
+        double z = ui->zSlider->value();
+        auto m = getMatrix(x, y, z);
+        painter.drawLines(projectCube(QVector3D(250,250,250), 200, angle, m));
     }
 }
 
@@ -90,5 +105,26 @@ void MainWindow::on_pushButton_3_clicked()
     segments = generateLines(size, ui->lineEdit2->text().toInt());
     state = 2;
     ui->label2->clear();
+    update();
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    state = 3;
+    update();
+}
+
+void MainWindow::on_xSlider_sliderMoved(int position)
+{
+    update();
+}
+
+void MainWindow::on_ySlider_sliderMoved(int position)
+{
+    update();
+}
+
+void MainWindow::on_zSlider_sliderMoved(int position)
+{
     update();
 }

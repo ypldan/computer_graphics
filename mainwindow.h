@@ -9,6 +9,7 @@
 #include "points_in_rect.h"
 #include "convex_hull.h"
 #include "segments.h"
+#include "cabinet.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,6 +34,14 @@ private slots:
     void on_pushButton_2_clicked();
 
     void on_pushButton_3_clicked();
+
+    void on_pushButton_4_clicked();
+
+    void on_xSlider_sliderMoved(int position);
+
+    void on_ySlider_sliderMoved(int position);
+
+    void on_zSlider_sliderMoved(int position);
 
 private:
     Ui::MainWindow *ui;
